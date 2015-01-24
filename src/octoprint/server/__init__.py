@@ -14,6 +14,8 @@ from flask.ext.babel import Babel, gettext, ngettext
 from babel import Locale
 from watchdog.observers import Observer
 from collections import defaultdict
+from urlparse import urlparse
+from jinja2 import Template
 
 import os
 import logging
@@ -342,10 +344,19 @@ def index():
 			templates[t]["entries"]["section_plugins"] = (gettext("Plugins"), None)
 			templates[t]["order"] += ["section_plugins"] + sorted_missing
 
+	#~~ combine webcam address
+
+	settingsWebcamStream = settings().get(["webcam", "stream"])
+	if settingsWebcamStream:
+		access_address = urlparse(request.url).hostname
+		webcamStream = Template(settingsWebcamStream).render(access_address=access_address)
+	else:
+		webcamStream = settingsWebcamStream
+
 	#~~ prepare full set of template vars for rendering
 
 	render_kwargs = dict(
-		webcamStream=settings().get(["webcam", "stream"]),
+		webcamStream=webcamStream,
 		enableTemperatureGraph=settings().get(["feature", "temperatureGraph"]),
 		enableAccessControl=userManager is not None,
 		enableSdSupport=settings().get(["feature", "sdSupport"]),
