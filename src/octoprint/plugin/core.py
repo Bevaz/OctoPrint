@@ -169,10 +169,15 @@ class PluginManager(object):
 			entries = os.listdir(folder)
 			for entry in entries:
 				path = os.path.join(folder, entry)
-				if os.path.isdir(path) and os.path.isfile(os.path.join(path, "__init__.py")):
+				if os.path.isdir(path) and ( os.path.isfile(os.path.join(path, "__init__.py"))
+							  or os.path.isfile(os.path.join(path, "__init__.pyc"))
+							  or os.path.isfile(os.path.join(path, "__init__.pyo"))):
 					key = entry
 				elif os.path.isfile(path) and entry.endswith(".py"):
 					key = entry[:-3] # strip off the .py extension
+				elif os.path.isfile(path) and ( entry.endswith(".pyc")
+							     or entry.endswith(".pyo")):
+					key = entry[:-4] # strip off the .py extension
 				else:
 					continue
 
