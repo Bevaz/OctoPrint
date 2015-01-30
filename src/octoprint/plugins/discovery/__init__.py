@@ -52,6 +52,7 @@ def __plugin_init__():
 
 
 default_settings = {
+	"instanceName": None,
 	"publicHost": None,
 	"publicPort": None,
 	"pathPrefix": None,
@@ -84,6 +85,9 @@ del get_uuid
 
 
 def get_instance_name():
+	instanceName = s.get(["instanceName"])
+	if instanceName:
+		return instanceName
 	name = s.globalGet(["appearance", "name"])
 	if name:
 		return u"OctoPrint instance \"{}\"".format(name)
