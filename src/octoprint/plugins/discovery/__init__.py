@@ -77,6 +77,7 @@ class DiscoveryPlugin(octoprint.plugin.StartupPlugin,
 
 	def get_settings_defaults(self):
 		return {
+			"instanceName": None,
 			"publicHost": None,
 			"publicPort": None,
 			"pathPrefix": None,
@@ -676,6 +677,9 @@ class DiscoveryPlugin(octoprint.plugin.StartupPlugin,
 		return upnpUuid
 
 	def get_instance_name(self):
+		instanceName = s.get(["instanceName"])
+		if instanceName:
+			return instanceName
 		name = self._settings.globalGet(["appearance", "name"])
 		if name:
 			return u"OctoPrint instance \"{}\"".format(name)
